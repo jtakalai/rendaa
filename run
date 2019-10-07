@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+cargo run 100 100 24
+ffmpeg -y -framerate 24 -i frames/frame%03d.png -c:v libx264 -pix_fmt yuv420p out.mp4
+ffmpeg -y -i out.mp4 -pix_fmt rgb24 out.gif
