@@ -18,11 +18,21 @@ fn main() {
     for (px, py, pixel) in img.enumerate_pixels_mut() {
         let x = (px as f64 / size as f64) - 0.5;
         let y = (py as f64 / size as f64) - 0.5;
-        let r = (120.0 + 100.0 * x) as u8;
-        let g = (120.0 + 100.0 * y) as u8;
-        let b = 0 as u8;
+        let a = y.atan2(x);
+        let r = (x * x + y * y).sqrt();
+        let z = (1.0 - r * r).sqrt();
+        let b = z.atan2(y);
+        let c = z.atan2(x);
+
+        let ruutu = ((7.0 * b) as u8 ^ (7.0 * c) as u8) % 2;
+
+        let (col_r, col_g, col_b) = if r < 0.4 {
+            (255, ruutu * 155 + 100, ruutu * 155 + 100)
+        } else {
+            (255, 100 + ((a * 7.0) as u8 % 2) * 155, 100)
+        };
         //print!("({}, {} -> {}{}{}) ", px, py, r, g, b);
-        *pixel = Rgb([r, g, b])
+        *pixel = Rgb([col_r, col_g, col_b])
     }
 
     img.save("test.png").expect("Saving failed ):");
