@@ -25,16 +25,15 @@ fn main() {
             let a = y.atan2(x);
             let r2 = x * x + y * y;
 
-            let (col_r, col_g, col_b) = if r2 < radius2 {
+            *pixel = if r2 < radius2 {
                 let z = (1.0 - r2 / radius2 / 2.0).sqrt();
                 let b = z.atan2(y);
                 let c = z.atan2(x);
                 let ruutu = ((7.0 * b) as u8 ^ (7.0 * c + t * 2.0) as u8) % 2;
-                (255, ruutu * 155 + 100, ruutu * 155 + 100)
+                Rgb([255, ruutu * 155 + 100, ruutu * 155 + 100])
             } else {
-                (255, 100 + ((a * 7.0 + t * 2.0) as u8 % 2) * 155, 100)
-            };
-            *pixel = Rgb([col_r, col_g, col_b])
+                Rgb([255, 100 + ((a * 7.0 + t * 2.0) as u8 % 2) * 155, 100])
+            }
         }
         let filename = format!("frames/frame{:0>3}.png", i);
         println!("Saving {} x {} image to {}", width, height, filename);
